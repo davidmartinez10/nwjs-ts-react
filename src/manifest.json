@@ -1,0 +1,25 @@
+{
+  "name": "nwjs-ts-react",
+  "main": "index.html",
+  "webview": {
+    "partitions": [
+      {
+        "name": "trusted",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      }
+    ]
+  },
+  "node-remote": "<all_urls>",
+  "permissions": [
+    "<all_urls>",
+    "activeTab",
+    "tabCapture",
+    "tabs",
+    "downloads",
+    "storage",
+    "identity",
+    "https://www.googleapis.com/*"
+  ]
+}
