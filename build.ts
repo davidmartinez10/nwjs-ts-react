@@ -7,6 +7,10 @@ const tsconfig = JSON.parse(String(fs.readFileSync("tsconfig.json")));
 
 async function main() {
   try {
+    if (!fs.existsSync(tsconfig.outDir)) {
+      fs.mkdirSync(tsconfig.outDir);
+    }
+
     const files = await promisify(fs.readdir)(tsconfig.outDir);
 
     for (const file of files) {
