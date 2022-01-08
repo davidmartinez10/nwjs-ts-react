@@ -21,6 +21,7 @@ async function main() {
     const manifest = await promisify(fs.readFile)(
       path.join(src, "manifest.json"),
     );
+
     await promisify(fs.writeFile)(
       path.join(tsconfig.outDir, "package.json"),
       manifest,

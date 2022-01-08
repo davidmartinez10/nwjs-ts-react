@@ -15,7 +15,10 @@ const debug = process.env.NODE_ENV === "production"
   : `--remote-debugging-port=${process.env.PORT || 9222}`;
 
 async function start() {
-  if (existsSync(`${tsconfig.outDir}/${package_json.main}`)) {
+  if (
+    existsSync(`${tsconfig.outDir}/${package_json.main}`)
+    || existsSync(`${tsconfig.outDir}/${package_json.main.split(".")[0]}.bin`)
+  ) {
     if (debug) {
       child_process.spawn(nwjs, [tsconfig.outDir, debug], { "detached": true }).unref();
       await wait({
