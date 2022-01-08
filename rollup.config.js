@@ -22,6 +22,7 @@ export default {
     {
       file: tsconfig.outDir + "/" + package_json.main,
       format: "cjs",
+      sourcemap: process.env.NODE_ENV === "production" ? false : "inline"
     },
   ],
   plugins: [
@@ -32,7 +33,8 @@ export default {
     typescript({
       typescript: ts,
       tsconfig: "./tsconfig.json",
-      sourceMap: process.env.NODE_ENV !== "production",
+      sourceMap: process.env.NODE_ENV === "production",
+      inlineSources: true
     }),
     json(),
     replace({
