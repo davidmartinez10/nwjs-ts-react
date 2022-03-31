@@ -29,7 +29,8 @@ export async function get_ffmpeg(nw_path?: string) {
         "MacOS/nwjs",
         "Frameworks/nwjs Framework.framework/Versions/Current",
       )
-      .replace("nw.exe", "");
+      .replace("nw.exe", "")
+      .replace("nw/nwjs/nw", "nw/nwjs/lib");
 
     yauzl.open(temp_path, { lazyEntries: true }, function (err, zip) {
       if (err || !zip) throw err;

@@ -75,7 +75,8 @@ export default {
         if (process.env.NODE_ENV === "production") {
           const compiler = require("nw").findpath()
             .replace("nwjs.app/Contents/MacOS/nwjs", "nwjc")
-            .replace("nw.exe", "nwjc.exe");
+            .replace("nw.exe", "nwjc.exe")
+            .replace("nw/nwjs/nw", "nw/nwjs/nwjc");
 
           await exec(
             `${compiler} ${path.join(tsconfig.outDir, package_json.main)} ${path.join(tsconfig.outDir, package_json.main.replace(".js", ".bin"))}`,

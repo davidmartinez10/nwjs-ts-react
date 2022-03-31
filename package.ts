@@ -32,6 +32,9 @@ async function pack() {
   } else if (os.platform() === "darwin") {
     commands.push(`cp -R "${temp_folder}/node_modules/nw/nwjs/nwjs.app" "./dist/${package_json.displayName}.app"`);
     commands.push(`cp -R "./${tsconfig.outDir}" "./dist/${package_json.displayName}.app/Contents/Resources/app.nw"`);
+  } else if (os.platform() === "linux") {
+    commands.push(`cp -R "${temp_folder}/node_modules/nw/nwjs" "./dist/${package_json.displayName}"`);
+    commands.push(`cp -R "./${tsconfig.outDir}" "./dist/${package_json.displayName}/package.nw"`);
   }
 
   for (const command of commands) {
