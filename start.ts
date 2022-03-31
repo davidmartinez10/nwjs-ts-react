@@ -1,33 +1,41 @@
-import fs, { existsSync } from "fs";
-import { promisify } from "util";
+import fs from "fs/promises";
 import child_process from "child_process";
-import os from "os";
+import { existsSync } from "fs";
+// @ts-ignore
+import nw from "nw";
+import { promisify } from "util";
 import wait from "wait-on";
 
-const package_json = JSON.parse(String(fs.readFileSync("package.json")));
-const tsconfig = JSON.parse(String(fs.readFileSync("tsconfig.json")));
-
-const nwjs = os.platform() === "win32"
-  ? ".\\nwjs\\win\\nw.exe"
-  : "./nwjs/macos/nwjs.app/Contents/MacOS/nwjs";
-const debug = process.env.NODE_ENV === "production"
-  ? ""
-  : `--remote-debugging-port=${process.env.PORT || 9222}`;
-
 async function start() {
-  if (
-    existsSync(`${tsconfig.outDir}/${package_json.main}`)
-    || existsSync(`${tsconfig.outDir}/${package_json.main.split(".")[0]}.bin`)
-  ) {
-    if (debug) {
-      child_process.spawn(nwjs, [tsconfig.outDir, debug], { "detached": true }).unref();
+  const package_json = JSON.parse(String(await fs.readFile("package.json")));
+  const tsconfig = JSON.parse(String(await fs.readFile("tsconfig.json")));
+
+  const debugging_port = 9222;
+
+  let entry_point = `${tsconfig.outDir}/${package_json.main}`;
+
+  if (process.env.NODE_ENV === "production") {
+    entry_point = entry_point.replace(".js", ".bin");
+  }
+
+  if (existsSync(entry_point)) {
+    if (process.env.DEBUG === "true") {
+      child_process.spawn(nw.findpath(), [
+        tsconfig.outDir,
+        `--remote-debugging-port=${debugging_port}`,
+      ], {
+        detached: true,
+      }).unref();
+
       await wait({
-        "resources": [
-          `http://127.0.0.1:${process.env.PORT || 9222}/`
+        resources: [
+          `http://127.0.0.1:${debugging_port}/`,
         ],
       });
     } else {
-      await promisify(child_process.exec)(`${nwjs} ${tsconfig.outDir} ${debug}`);
+      promisify(child_process.exec)(
+        `${nw.findpath()} ${tsconfig.outDir}`,
+      );
     }
     process.exit(0);
   } else {

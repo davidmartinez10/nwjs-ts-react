@@ -1,16 +1,6 @@
 {
-  "name": "nwjs-ts-react",
+  "name": "nwts-react",
   "main": "index.html",
-  "webview": {
-    "partitions": [
-      {
-        "name": "trusted",
-        "accessible_resources": [
-          "<all_urls>"
-        ]
-      }
-    ]
-  },
   "node-remote": "<all_urls>",
   "permissions": [
     "<all_urls>",
@@ -18,8 +8,12 @@
     "tabCapture",
     "tabs",
     "downloads",
-    "storage",
-    "identity",
-    "https://www.googleapis.com/*"
-  ]
+    "storage"
+  ],
+  "window": {
+    "height": 860,
+    "width": 1280,
+    "position": "center"
+  },
+  "domain": "nwtsreact"
 }

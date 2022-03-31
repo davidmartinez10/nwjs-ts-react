@@ -2,8 +2,6 @@
 
 # Setup
 
-Add NWJS binaries to nwjs/win32 or nwjs/macos and run:
-
 ```
 pnpm i
 ```

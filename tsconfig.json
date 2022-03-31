@@ -21,8 +21,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src",
-    "rollup.config.js"
+    "src"
   ],
-  "outDir": "dist"
+  "outDir": "build"
 }
