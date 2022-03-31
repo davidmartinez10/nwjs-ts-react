@@ -24,13 +24,11 @@ export async function get_ffmpeg(nw_path?: string) {
     const temp = fs.createWriteStream(temp_path);
     await promisify(stream.pipeline)(got.stream(url), temp);
 
-    const destination_path = (nw_path || nw.findpath())
-      .replace(
-        "MacOS/nwjs",
-        "Frameworks/nwjs Framework.framework/Versions/Current",
-      )
-      .replace("nw.exe", "")
-      .replace("nw/nwjs/nw", "nw/nwjs/lib");
+    let destination_path = (nw_path || nw.findpath());
+
+    if (os.platform() === "win32") destination_path = destination_path.replace("nw.exe", "");
+    if (os.platform() === "darwin") destination_path = destination_path.replace("MacOS/nwjs", "Frameworks/nwjs Framework.framework/Versions/Current");
+    if (os.platform() === "linux") destination_path = destination_path.replace("nw/nwjs/nw", "nw/nwjs/lib");
 
     yauzl.open(temp_path, { lazyEntries: true }, function (err, zip) {
       if (err || !zip) throw err;

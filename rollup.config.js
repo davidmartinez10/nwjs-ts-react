@@ -8,6 +8,7 @@ import json from "@rollup/plugin-json";
 import child_process from "child_process";
 import fs from "fs";
 import path from "path";
+import os from "os";
 import typescript from "typescript";
 import { promisify } from "util";
 
@@ -73,10 +74,10 @@ export default {
         await fs.promises.writeFile(tsconfig.outDir + "/index.html", html);
 
         if (process.env.NODE_ENV === "production") {
-          const compiler = require("nw").findpath()
-            .replace("nwjs.app/Contents/MacOS/nwjs", "nwjc")
-            .replace("nw.exe", "nwjc.exe")
-            .replace("nw/nwjs/nw", "nw/nwjs/nwjc");
+          let compiler = require("nw").findpath();
+          if (os.platform() === "win32") compiler = compiler.replace("nw.exe", "nwjc.exe");
+          if (os.platform() === "darwin") compiler = compiler.replace("nwjs.app/Contents/MacOS/nwjs", "nwjc");
+          if (os.platform() === "linux") compiler = compiler.replace("node_modules/nw/nwjs/nw", "node_modules/nw/nwjs/nwjc");
 
           await exec(
             `${compiler} ${path.join(tsconfig.outDir, package_json.main)} ${path.join(tsconfig.outDir, package_json.main.replace(".js", ".bin"))}`,
