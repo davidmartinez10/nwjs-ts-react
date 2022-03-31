@@ -26,9 +26,10 @@ export async function get_ffmpeg(nw_path?: string) {
 
     const destination_path = (nw_path || nw.findpath())
       .replace(
-        process.platform === "darwin" ? "MacOS/nwjs" : "",
+        "MacOS/nwjs",
         "Frameworks/nwjs Framework.framework/Versions/Current",
-      );
+      )
+      .replace("nw.exe", "");
 
     yauzl.open(temp_path, { lazyEntries: true }, function (err, zip) {
       if (err || !zip) throw err;

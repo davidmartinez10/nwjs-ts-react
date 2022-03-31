@@ -6,7 +6,6 @@ import external from "rollup-plugin-peer-deps-external";
 import styles from "rollup-plugin-styles";
 import json from "@rollup/plugin-json";
 import child_process from "child_process";
-import os from "os";
 import fs from "fs";
 import path from "path";
 import typescript from "typescript";
@@ -74,19 +73,14 @@ export default {
         await fs.promises.writeFile(tsconfig.outDir + "/index.html", html);
 
         if (process.env.NODE_ENV === "production") {
-          const compiler = path.join(
-            require("nw").findpath().replace(
-              os.platform() === "darwin" ? "nwjs.app/Contents/MacOS/nwjs" : "",
-              "",
-            ),
-            "nwjc",
-          );
+          const compiler = require("nw").findpath()
+            .replace("nwjs.app/Contents/MacOS/nwjs", "nwjc")
+            .replace("nw.exe", "nwjc.exe");
 
           await exec(
-            `${compiler} ./${tsconfig.outDir}/${package_json.main} ./${tsconfig.outDir}/${package_json.main.replace(".js", ".bin")
-            }`,
+            `${compiler} ${path.join(tsconfig.outDir, package_json.main)} ${path.join(tsconfig.outDir, package_json.main.replace(".js", ".bin"))}`,
           );
-          await fs.promises.unlink(`./${tsconfig.outDir}/${package_json.main}`);
+          await fs.promises.unlink(path.join(tsconfig.outDir, package_json.main));
         }
         if (process.env.RUN_NWJS === "true") {
           exec("node --loader ts-node/esm ./start.ts");

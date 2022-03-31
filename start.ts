@@ -3,7 +3,6 @@ import child_process from "child_process";
 import { existsSync } from "fs";
 // @ts-ignore
 import nw from "nw";
-import { promisify } from "util";
 import wait from "wait-on";
 
 async function start() {
@@ -25,6 +24,7 @@ async function start() {
         `--remote-debugging-port=${debugging_port}`,
       ], {
         detached: true,
+        shell: true,
       }).unref();
 
       await wait({
@@ -33,9 +33,7 @@ async function start() {
         ],
       });
     } else {
-      promisify(child_process.exec)(
-        `${nw.findpath()} ${tsconfig.outDir}`,
-      );
+      child_process.spawn(nw.findpath(), [tsconfig.outDir], { shell: true }).stdout.pipe(process.stdout);
     }
     process.exit(0);
   } else {

@@ -11,8 +11,8 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "run-nwjs": "cross-env DEBUG=true node --loader ts-node/esm ./start.ts",
-    "clean": "rm -rf ./build && rm -rf ./dist",
-    "package": "npm run clean && NODE_ENV=production npm run build && node --loader ts-node/esm ./package.ts",
+    "clean": "npx rimraf ./build && npx rimraf ./dist",
+    "package": "npm run clean && cross-env NODE_ENV=production npm run build && node --loader ts-node/esm ./package.ts",
     "postinstall": "node --loader ts-node/esm ./postinstall.ts"
   },
   "author": "David Martínez",
@@ -35,6 +35,7 @@
     "nwjs-ffmpeg-prebuilt": "^0.0.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "rimraf": "^3.0.2",
     "rollup": "2.63.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-styles": "^4.0.0",
