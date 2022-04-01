@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src","*.ts", "missing_definitions.d.ts"],
+  "include": ["src", "*.ts"],
   "outDir": "build",
   "ts-node": {
     "files": true

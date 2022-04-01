@@ -19,8 +19,8 @@ async function pack() {
   const { findpath } = await import(
     os.platform() === "win32"
       ? `file:///${path
-        .join(temp_folder, "node_modules/nw/index.js")
-        .replace(/\\/g, "/")}`
+          .join(temp_folder, "node_modules/nw/index.js")
+          .replace(/\\/g, "/")}`
       : path.join(temp_folder, "node_modules/nw/index.js")
   );
   await get_ffmpeg(findpath());

@@ -38,7 +38,10 @@ export async function get_ffmpeg(nw_path?: string) {
           "Frameworks/nwjs Framework.framework/Versions/Current"
         );
       if (os.platform() === "linux")
-        destination_path = destination_path.replace("nw/nwjs/nw", "nw/nwjs/lib");
+        destination_path = destination_path.replace(
+          "nw/nwjs/nw",
+          "nw/nwjs/lib"
+        );
 
       yauzl.open(temp_path, { lazyEntries: true }, function (err, zip) {
         if (err || !zip) throw err;
@@ -56,7 +59,9 @@ export async function get_ffmpeg(nw_path?: string) {
               });
               read_stream.pipe(
                 fs
-                  .createWriteStream(path.join(destination_path, entry.fileName))
+                  .createWriteStream(
+                    path.join(destination_path, entry.fileName)
+                  )
                   .on("close", resolve)
               );
             });

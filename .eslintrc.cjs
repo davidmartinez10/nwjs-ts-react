@@ -22,6 +22,6 @@ module.exports = {
   rules: {
     "func-style": ["error", "declaration", { allowArrowFunctions: false }],
     "no-restricted-syntax": [2, "ClassDeclaration"],
-    "@typescript-eslint/no-var-requires": "off"
+    "@typescript-eslint/no-var-requires": "off",
   },
 };
