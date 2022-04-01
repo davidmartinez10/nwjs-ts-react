@@ -13,7 +13,7 @@
       "label": "start",
       "type": "npm",
       "script": "run-nwjs",
-      "dependsOn": "build",
-    },
+      "dependsOn": "build"
+    }
   ]
 }

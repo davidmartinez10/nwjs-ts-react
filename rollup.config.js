@@ -11,6 +11,7 @@ import path from "path";
 import os from "os";
 import typescript from "typescript";
 import { promisify } from "util";
+import { findpath } from "nw";
 
 const exec = promisify(child_process.exec);
 
@@ -39,8 +40,9 @@ export default {
     }),
     json(),
     replace({
-      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV ||
-        "development"),
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "development"
+      ),
     }),
     {
       async writeBundle() {
@@ -51,12 +53,16 @@ export default {
         const [src] = tsconfig.include;
         await fs.promises.copyFile(
           path.join(src, "manifest.json"),
-          path.join(tsconfig.outDir, "package.json"),
+          path.join(tsconfig.outDir, "package.json")
         );
 
-        const script = process.env.NODE_ENV === "production"
-          ? `<script>nw.Window.get().evalNWBin(null, "${package_json.main.replace(".js", ".bin")}");</script>`
-          : `<script src="${package_json.main}"></script>`;
+        const script =
+          process.env.NODE_ENV === "production"
+            ? `<script>nw.Window.get().evalNWBin(null, "${package_json.main.replace(
+              ".js",
+              ".bin"
+            )}");</script>`
+            : `<script src="${package_json.main}"></script>`;
 
         const html = `<!DOCTYPE html>
   <html lang="en">
@@ -74,15 +80,29 @@ export default {
         await fs.promises.writeFile(tsconfig.outDir + "/index.html", html);
 
         if (process.env.NODE_ENV === "production") {
-          let compiler = require("nw").findpath();
-          if (os.platform() === "win32") compiler = compiler.replace("nw.exe", "nwjc.exe");
-          if (os.platform() === "darwin") compiler = compiler.replace("nwjs.app/Contents/MacOS/nwjs", "nwjc");
-          if (os.platform() === "linux") compiler = compiler.replace("node_modules/nw/nwjs/nw", "node_modules/nw/nwjs/nwjc");
+          let compiler = findpath();
+          if (os.platform() === "win32")
+            compiler = compiler.replace("nw.exe", "nwjc.exe");
+          if (os.platform() === "darwin")
+            compiler = compiler.replace("nwjs.app/Contents/MacOS/nwjs", "nwjc");
+          if (os.platform() === "linux")
+            compiler = compiler.replace(
+              "node_modules/nw/nwjs/nw",
+              "node_modules/nw/nwjs/nwjc"
+            );
 
           await exec(
-            `${compiler} ${path.join(tsconfig.outDir, package_json.main)} ${path.join(tsconfig.outDir, package_json.main.replace(".js", ".bin"))}`,
+            `${compiler} ${path.join(
+              tsconfig.outDir,
+              package_json.main
+            )} ${path.join(
+              tsconfig.outDir,
+              package_json.main.replace(".js", ".bin")
+            )}`
           );
-          await fs.promises.unlink(path.join(tsconfig.outDir, package_json.main));
+          await fs.promises.unlink(
+            path.join(tsconfig.outDir, package_json.main)
+          );
         }
         if (process.env.RUN_NWJS === "true") {
           exec("node --loader ts-node/esm ./start.ts");

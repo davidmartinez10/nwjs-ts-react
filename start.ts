@@ -1,8 +1,7 @@
 import fs from "fs/promises";
 import child_process from "child_process";
 import { existsSync } from "fs";
-// @ts-ignore
-import nw from "nw";
+import { findpath } from "nw";
 import wait from "wait-on";
 
 async function start() {
@@ -19,21 +18,24 @@ async function start() {
 
   if (existsSync(entry_point)) {
     if (process.env.DEBUG === "true") {
-      child_process.spawn(nw.findpath(), [
-        tsconfig.outDir,
-        `--remote-debugging-port=${debugging_port}`,
-      ], {
-        detached: true,
-        shell: true,
-      }).unref();
+      child_process
+        .spawn(
+          findpath(),
+          [tsconfig.outDir, `--remote-debugging-port=${debugging_port}`],
+          {
+            detached: true,
+            shell: true,
+          }
+        )
+        .unref();
 
       await wait({
-        resources: [
-          `http://127.0.0.1:${debugging_port}/`,
-        ],
+        resources: [`http://127.0.0.1:${debugging_port}/`],
       });
     } else {
-      child_process.spawn(nw.findpath(), [tsconfig.outDir], { shell: true }).stdout.pipe(process.stdout);
+      child_process
+        .spawn(findpath(), [tsconfig.outDir], { shell: true })
+        .stdout.pipe(process.stdout);
     }
     process.exit(0);
   } else {

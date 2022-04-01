@@ -10,7 +10,8 @@ react_dom.createRoot(root).render(React.createElement(app));
 const package_json = require("../package.json");
 
 let entry_point = require("path").join(process.cwd(), package_json.main);
-if (process.env.NODE_ENV === "production") entry_point = entry_point.replace(".js", ".bin");
+if (process.env.NODE_ENV === "production")
+  entry_point = entry_point.replace(".js", ".bin");
 
 require("fs").watch(entry_point, function () {
   if (location) location.reload();
